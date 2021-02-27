@@ -1,0 +1,34 @@
+import pandas as pd
+import csv
+
+def merge_csv(inputfiles, outputfile):
+    df = pd.DataFrame()
+    for i in inputfiles:
+        df1 = pd.read_csv(i)
+        df = pd.concat([df,df1], axis=0, ignore_index=True)
+    
+    df.to_csv(outputfile)
+    
+    return True
+
+merge_csv(['class1.csv','class2.csv'],'output.csv')
+
+
+def merge_csv2(csv_list, output_path):
+    fieldnames = list()
+    
+    for file in csv_list:
+        with open(file,'r') as input_csv:
+            fn = csv.DictReader(input_csv).fieldnames
+            fieldnames.extend(x for x in fn if x not in fieldnames)
+    
+    with open(output_path, 'w', newline= '') as output_csv:
+        writer = csv.DictWriter(output_csv, fieldnames = fieldnames)
+        writer.writeheader()
+        for file in csv_list:
+            with open(file,'r') as input_csv:
+                reader = csv.DictReader(input_csv)
+                for row in reader:
+                    writer.writerow(row)
+
+merge_csv2(['class1.csv','class2.csv'],'output.csv')
